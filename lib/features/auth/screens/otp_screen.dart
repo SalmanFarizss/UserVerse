@@ -50,10 +50,25 @@ class _OtpScreenState extends State<OtpScreen> {
               SizedBox(
                 height: height * 0.03,
               ),
-              Pinput(
-                controller: otpController,
-                keyboardType: TextInputType.number,
-                length: 6,
+              Center(
+                child: Pinput(
+                  cursor: Container(),
+                  controller: otpController,
+                  keyboardType: TextInputType.number,
+                  length: 6,
+                  defaultPinTheme: PinTheme(
+                    height: width*0.13,
+                    width: width*0.13,
+                    textStyle: TextStyle(color: Colors.red,fontSize: width*0.04,fontWeight: FontWeight.bold),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),border: Border.all(color: Colors.grey,width: 1))
+                  ),
+                  submittedPinTheme: PinTheme(
+                      height: width*0.13,
+                      width: width*0.13,
+                      textStyle: TextStyle(color: Colors.red,fontSize: width*0.04,fontWeight: FontWeight.bold),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10),border: Border.all(color: Colors.black,width: 1))
+                  ),
+                ),
               ),
               SizedBox(
                 height: height * 0.02,
