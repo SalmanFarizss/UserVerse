@@ -42,6 +42,7 @@ dependencies:
   firebase_storage: ^11.6.0
   cloud_firestore: ^4.13.6
   image_picker: ^1.0.7
+  lazy_load_scrollview: ^1.3.0
 
 dev_dependencies:
   flutter_test:

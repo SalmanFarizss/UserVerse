@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:user_verse/core/constants/firebase_constants.dart';
+import 'package:user_verse/core/globals.dart';
+import 'package:user_verse/core/utils.dart';
 import 'package:user_verse/features/home/bloc/home_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -14,6 +16,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
   CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.usersCollection);
   HomeBloc() : super(HomeInitialState()) {
+    //add new user
     on<AddUser>((event, emit) async {
       try {
         emit(HomeLoading());
@@ -27,7 +30,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
           return emit(HomeFailure(error: 'Please Enter Valid Phone number'));
         }
         String? url = await uploadImage(event.profileImage!);
-        if(url==null){
+        if (url == null) {
           return emit(HomeFailure(error: 'Image Upload Error'));
         }
         UserModel user = UserModel(
@@ -35,16 +38,50 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
             profile: url,
             phone: event.phone,
             age: event.age,
-            searchKeys: []);
+            searchKeys: setSearchParam('${event.name} ${event.phone}'));
         await _users.add(user.toMap());
         emit(HomeSuccess());
       } catch (error) {
         emit(HomeFailure(error: error.toString()));
       }
     });
+    //fetchData
+    on<GetInitialUsers>((event, emit) async {
+      try {
+        emit(HomeLoading());
+        _users.where('searchKeys',arrayContains:event.search.isEmpty?null:event.search).orderBy('age', descending: event.radioValue == 1)
+            .where('age', isLessThan: event.radioValue == 2 ? 60 : null)
+            .where('age', isGreaterThan: event.radioValue == 1 ? 60 : null).limit(limit).snapshots().listen((value) {
+          List<UserModel> users = value.docs
+              .map((e) => UserModel.fromMap(e.data() as Map<String, dynamic>))
+              .toList();
+          add(EmitFetchingComplete(users: users,lastDoc: value.docs.last));
+        });
+      } catch (e) {
+        emit(HomeFailure(error: e.toString()));
+      }
+    });
+    on<GetMoreUsers>((event, emit) async {
+      try {
+        emit(HomeLoading());
+        _users.startAfterDocument(event.lastDoc).where('searchKeys',arrayContains:event.search.isEmpty?null:event.search).orderBy('age', descending: event.radioValue == 1)
+            .where('age', isLessThan: event.radioValue == 2 ? 60 : null)
+            .where('age', isGreaterThan: event.radioValue == 1 ? 60 : null).limit(limit).snapshots().listen((value) {
+          List<UserModel> users = value.docs
+              .map((e) => UserModel.fromMap(e.data() as Map<String, dynamic>))
+              .toList();
+          add(EmitFetchingComplete(users: users,lastDoc:value.docs.last));
+        });
+      } catch (e) {
+        emit(HomeFailure(error: e.toString()));
+      }
+    });
+    on<EmitFetchingComplete>((event, emit) {
+      emit(FetchingCompleted(users: event.users,lastDoc: event.lastDoc));
+    });
   }
   Future<String?> uploadImage(File file) async {
-    try{
+    try {
       final metadata = SettableMetadata(
         contentType: 'image/jpeg',
         customMetadata: {'picked-file-path': file.path},
@@ -54,27 +91,9 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
           .child('images/profiles/${DateTime.now()}')
           .putData(file.readAsBytesSync(), metadata);
       return uploadSnap.ref.getDownloadURL();
-    }catch(e){
+    } catch (e) {
       print('image upload error:${e.toString()}..................');
       return null;
     }
-  }
-
-  final StreamController<List<UserModel>> _userController =
-      StreamController<List<UserModel>>();
-
-  Stream<List<UserModel>> get usersStream => _userController.stream;
-
-  void fetchUsers() {
-    _users.snapshots().listen((snapshot) {
-      final List<UserModel> users = snapshot.docs
-          .map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
-      _userController.add(users);
-    });
-  }
-
-  void dispose() {
-    _userController.close();
   }
 }
