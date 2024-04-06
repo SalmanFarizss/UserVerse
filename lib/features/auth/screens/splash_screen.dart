@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:user_verse/core/globals.dart';
 import 'package:user_verse/features/auth/screens/login_screen.dart';
+import 'package:user_verse/features/home/home_screen.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -22,8 +23,8 @@ class _SplashScreenState extends State<SplashScreen> {
     height=MediaQuery.of(context).size.height;
     width=MediaQuery.of(context).size.width;
     return  Scaffold(
-      backgroundColor: Colors.black,
-      body:Center(child: Image.asset('assets/images/logo.png')),
+      backgroundColor: Colors.white,
+      body:Center(child: SizedBox(width:width*0.5,child: Image.asset('assets/images/logo.png'))),
     );
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/globals.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const   HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -101,6 +101,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
                                 color: Colors.white,
                               ),
                               child: Row(
@@ -348,6 +354,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-            ));
+        ));
   }
 }
