@@ -5,7 +5,7 @@ part 'auth_events.dart';
 
 class AuthBloc extends Bloc<AuthEvents, AuthState> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  AuthBloc() : super(InitialState()) {
+  AuthBloc() : super(AuthInitialState()) {
     //sending otp
     on<PhoneSignIn>((event, emit) async {
       try {

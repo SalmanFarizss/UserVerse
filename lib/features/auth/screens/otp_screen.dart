@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
-import 'package:user_verse/bloc/auth_bloc.dart';
-import 'package:user_verse/bloc/auth_state.dart';
+import 'package:user_verse/features/auth/bloc/auth_bloc.dart';
+import 'package:user_verse/features/auth/bloc/auth_state.dart';
 import 'package:user_verse/features/auth/screens/login_screen.dart';
-import 'package:user_verse/features/home/home_screen.dart';
+import 'package:user_verse/features/home/screens/home_screen.dart';
 import '../../../core/globals.dart';
 import '../../../core/utils.dart';
 

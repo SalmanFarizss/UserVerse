@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:user_verse/core/globals.dart';
 import 'package:user_verse/features/auth/screens/login_screen.dart';
-import 'package:user_verse/features/home/home_screen.dart';
+import 'package:user_verse/features/home/screens/home_screen.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -14,7 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 2),(){
-      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const LoginScreen(),));
+      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const HomeScreen(),));
     });
     super.initState();
   }

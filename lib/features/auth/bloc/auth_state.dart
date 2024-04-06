@@ -1,6 +1,6 @@
 sealed class AuthState {}
 
-final class InitialState extends AuthState {}
+final class AuthInitialState extends AuthState {}
 
 final class AuthFailure extends AuthState {
   String error;

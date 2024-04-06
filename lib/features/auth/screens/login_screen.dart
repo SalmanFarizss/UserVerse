@@ -3,11 +3,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:user_verse/bloc/auth_bloc.dart';
-import 'package:user_verse/bloc/auth_state.dart';
 import 'package:user_verse/core/globals.dart';
 import 'package:user_verse/core/utils.dart';
 import 'package:user_verse/features/auth/screens/otp_screen.dart';
+
+import '../bloc/auth_bloc.dart';
+import '../bloc/auth_state.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

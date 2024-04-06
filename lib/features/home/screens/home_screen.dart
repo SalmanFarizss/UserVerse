@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:user_verse/features/home/bloc/home_bloc.dart';
+import 'package:user_verse/features/home/screens/add_user.dart';
+import 'package:user_verse/models/user_model.dart';
 
-import '../../core/globals.dart';
+import '../../../core/globals.dart';
 
 class HomeScreen extends StatefulWidget {
-  const   HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -11,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController searchController = TextEditingController();
+  final _homeBloc = HomeBloc();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -90,62 +96,78 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(
                   height: height,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 15,
-                      itemBuilder: (context, index) => Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            child: Container(
-                              height: height * 0.1,
-                              width: width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                                color: Colors.white,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(6),
-                                    child: CircleAvatar(
-                                      backgroundImage: AssetImage(
-                                          'assets/images/login_image.png'),
-                                      radius: height * 0.05,
+                  child: StreamBuilder<List<UserModel>>(
+                    stream: _homeBloc.usersStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final users = snapshot.data!;
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: users.length,
+                            itemBuilder: (context, index) {
+                              UserModel user=users[index];
+                              return Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 5),
+                                  child: Container(
+                                    height: height * 0.1,
+                                    width: width,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ],
+                                      color: Colors.white,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.all(6),
+                                          child: CircleAvatar(
+                                            backgroundImage: NetworkImage(user.profile),
+                                            radius: height * 0.05,
+                                          ),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              user.name,
+                                              style: TextStyle(
+                                                  fontSize: width * 0.04,
+                                                  color: Colors.black),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              user.age.toString(),
+                                              style: TextStyle(
+                                                  fontSize: width * 0.035,
+                                                  color: Colors.grey.shade600),
+                                            )
+                                          ],
+                                        )
+                                      ],
                                     ),
                                   ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'User Name',
-                                        style: TextStyle(
-                                            fontSize: width * 0.04,
-                                            color: Colors.black),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'Age: 35',
-                                        style: TextStyle(
-                                            fontSize: width * 0.035,
-                                            color: Colors.grey.shade600),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          )),
+                                );
+                            });
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                    },
+                  ),
                 )
               ],
             ),
@@ -153,7 +175,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         floatingActionButton: InkWell(
           onTap: () {
-            addNewUser(context: context);
+            Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => const AddNewUser(),
+                ));
           },
           child: CircleAvatar(
             radius: width * 0.085,
@@ -168,100 +194,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  Future<void> addNewUser({required BuildContext context}) async {
-    TextEditingController nameController = TextEditingController();
-    TextEditingController ageController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(width*0.05)),
-        title: Text('Add A New User'),
-        content: SizedBox(
-          height: height * 0.3,
-          width: width ,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: height * 0.1,
-                width: width,
-                child: Image.asset('assets/images/default_avatar.png'),
-              ),
-              Text('Name'),
-              SizedBox(
-                height: height * 0.06,
-                child: TextFormField(
-                  controller: nameController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                      hintText: 'Name',
-                      hintStyle: TextStyle(
-                          fontSize: width * 0.035, color: Colors.grey),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.grey.shade100))),
-                ),
-              ),
-              Text('Age'),
-              SizedBox(
-                height: height * 0.06,
-                child: TextFormField(
-                  controller: ageController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                      hintText: 'Age',
-                      hintStyle: TextStyle(
-                          fontSize: width * 0.035, color: Colors.grey),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Colors.grey.shade100))),
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey.shade200),
-              height: height * 0.04,
-              width: width * 0.25,
-              child: Center(
-                child: Text('Cancel'),
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.blueAccent),
-              height: height * 0.04,
-              width: width * 0.25,
-              child: Center(
-                child: Text('Save'),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   void sortingBox({required BuildContext context}) {
     int sortingValue = 0;
     showModalBottomSheet(
-      shape: RoundedRectangleBorder(borderRadius:BorderRadius.vertical(top: Radius.circular(height*0.04)) ),
+        shape: RoundedRectangleBorder(
+            borderRadius:
+                BorderRadius.vertical(top: Radius.circular(height * 0.04))),
         context: context,
         builder: (context) => Container(
               height: height * 0.3,
@@ -354,6 +292,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-        ));
+            ));
   }
 }
