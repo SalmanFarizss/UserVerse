@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:user_verse/core/globals.dart';
 import 'package:user_verse/core/utils.dart';
 import 'package:user_verse/features/auth/screens/otp_screen.dart';
@@ -115,7 +116,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         text: ' Terms and conditions',
                         style: TextStyle(
                             fontSize: width * 0.035, color: Palette.blueColor),
-                        recognizer: TapGestureRecognizer()..onTap = () {}),
+                        recognizer: TapGestureRecognizer()..onTap = (){
+                          launchURLBrowser();
+                        }),
                     TextSpan(
                         text: '& ',
                         style: TextStyle(
@@ -125,7 +128,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         text: 'privacy policy',
                         style: TextStyle(
                             fontSize: width * 0.035, color: Palette.blueColor),
-                        recognizer: TapGestureRecognizer()..onTap = () {}),
+                        recognizer: TapGestureRecognizer()..onTap = () {
+                          launchURLBrowser();
+                        }),
                   ]),
                 ),
                 SizedBox(
@@ -157,5 +162,14 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       },
     ));
+  }
+  launchURLBrowser() async {
+    var url = Uri.parse(
+        "https://totalx.in/about-us");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

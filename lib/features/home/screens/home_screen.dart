@@ -243,8 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 height: 10,
                                                               ),
                                                               Text(
-                                                                user.age
-                                                                    .toString(),
+                                                               'Age: ${user.age}',
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         width *
