@@ -33,13 +33,15 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
         if (url == null) {
           return emit(HomeFailure(error: 'Image Upload Error'));
         }
+        DocumentReference userDoc=_users.doc();
         UserModel user = UserModel(
+          uid: userDoc.id,
             name: event.name,
             profile: url,
             phone: event.phone,
             age: event.age,
             searchKeys: setSearchParam('${event.name} ${event.phone}'));
-        await _users.add(user.toMap());
+        await userDoc.set(user.toMap());
         emit(HomeSuccess());
       } catch (error) {
         emit(HomeFailure(error: error.toString()));
@@ -55,7 +57,7 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
           List<UserModel> users = value.docs
               .map((e) => UserModel.fromMap(e.data() as Map<String, dynamic>))
               .toList();
-          add(EmitFetchingComplete(users: users,lastDoc: value.docs.last));
+          add(EmitFetchingComplete(users: users,lastDoc: value.docs.isEmpty?null:value.docs.last));
         });
       } catch (e) {
         emit(HomeFailure(error: e.toString()));
@@ -64,13 +66,13 @@ class HomeBloc extends Bloc<HomeEvents, HomeState> {
     on<GetMoreUsers>((event, emit) async {
       try {
         emit(HomeLoading());
-        _users.startAfterDocument(event.lastDoc).where('searchKeys',arrayContains:event.search.isEmpty?null:event.search).orderBy('age', descending: event.radioValue == 1)
+        _users.where('searchKeys',arrayContains:event.search.isEmpty?null:event.search).orderBy('age', descending: event.radioValue == 1)
             .where('age', isLessThan: event.radioValue == 2 ? 60 : null)
-            .where('age', isGreaterThan: event.radioValue == 1 ? 60 : null).limit(limit).snapshots().listen((value) {
+            .where('age', isGreaterThan: event.radioValue == 1 ? 60 : null).startAfterDocument(event.lastDoc).limit(limit).snapshots().listen((value) {
           List<UserModel> users = value.docs
               .map((e) => UserModel.fromMap(e.data() as Map<String, dynamic>))
               .toList();
-          add(EmitFetchingComplete(users: users,lastDoc:value.docs.last));
+          add(EmitFetchingComplete(users: users,lastDoc:value.docs.isEmpty?null:value.docs.last));
         });
       } catch (e) {
         emit(HomeFailure(error: e.toString()));

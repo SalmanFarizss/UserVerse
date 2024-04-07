@@ -1,12 +1,17 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:user_verse/core/constants/conatants.dart';
 import 'package:user_verse/core/globals.dart';
 import 'package:user_verse/core/utils.dart';
 import 'package:user_verse/features/home/bloc/home_bloc.dart';
 import 'package:user_verse/features/home/bloc/home_state.dart';
 import 'package:user_verse/features/home/bloc/image_cubit.dart';
+import 'package:user_verse/features/home/screens/home_screen.dart';
+
+import '../../../core/theme/palette.dart';
 
 class AddNewUser extends StatefulWidget {
   const AddNewUser({super.key});
@@ -24,16 +29,16 @@ class _AddNewUserState extends State<AddNewUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Palette.blackColor,
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: Palette.blackColor,
       body: BlocConsumer<HomeBloc,HomeState>(listener: (context, state) {
         if(state is HomeFailure){
           failureSnackBar(context, state.error);
         }
         if(state is HomeSuccess){
           successSnackBar(context, 'User Added...');
-          Navigator.pop(context);
+          Navigator.pushAndRemoveUntil(context,CupertinoPageRoute(builder: (context) => HomeScreen(),),(route) => false,);
         }
       },
         builder: (context, state) {
@@ -48,7 +53,7 @@ class _AddNewUserState extends State<AddNewUser> {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(width * 0.05),
-                      color: Colors.white),
+                      color: Palette.whiteColor),
                   height: height * 0.62,
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -75,7 +80,7 @@ class _AddNewUserState extends State<AddNewUser> {
                                     imageCubit.pickImage();
                                   },
                                   child:image==null?
-                                  Image.asset('assets/images/default_avatar.png'):CircleAvatar(radius:width*0.2,backgroundImage:FileImage(image,))),
+                                  Image.asset(Constants.defaultAvatar):CircleAvatar(radius:width*0.2,backgroundImage:FileImage(image,))),
                             ),
                             const SizedBox(
                               height: 10,
@@ -83,7 +88,7 @@ class _AddNewUserState extends State<AddNewUser> {
                             Text(
                               '  Name',
                               style: TextStyle(
-                                  color: Colors.grey, fontSize: width * 0.035),
+                                  color: Palette.greyColor, fontSize: width * 0.035),
                             ),
                             const SizedBox(
                               height: 5,
@@ -99,7 +104,7 @@ class _AddNewUserState extends State<AddNewUser> {
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide:
-                                        BorderSide(color: Colors.grey.shade100))),
+                                        BorderSide(color:Palette.greyColor.shade100))),
                               ),
                             ),
                             const SizedBox(
@@ -108,7 +113,7 @@ class _AddNewUserState extends State<AddNewUser> {
                             Text(
                               '  Age',
                               style: TextStyle(
-                                  color: Colors.grey, fontSize: width * 0.035),
+                                  color: Palette.greyColor, fontSize: width * 0.035),
                             ),
                             const SizedBox(
                               height: 5,
@@ -122,11 +127,11 @@ class _AddNewUserState extends State<AddNewUser> {
                                 decoration: InputDecoration(
                                     hintText: 'Age',
                                     hintStyle: TextStyle(
-                                        fontSize: width * 0.04, color: Colors.black),
+                                        fontSize: width * 0.04, color:Palette.blackColor),
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide:
-                                        BorderSide(color: Colors.grey.shade100))),
+                                        BorderSide(color: Palette.greyColor.shade100))),
                               ),
                             ),
                             const SizedBox(
@@ -135,7 +140,7 @@ class _AddNewUserState extends State<AddNewUser> {
                             Text(
                               '  Phone',
                               style: TextStyle(
-                                  color: Colors.grey, fontSize: width * 0.038),
+                                  color: Palette.greyColor, fontSize: width * 0.038),
                             ),
                             const SizedBox(
                               height: 5,
@@ -149,11 +154,11 @@ class _AddNewUserState extends State<AddNewUser> {
                                 decoration: InputDecoration(
                                     hintText: 'Phone',
                                     hintStyle: TextStyle(
-                                        fontSize: width * 0.04, color: Colors.black),
+                                        fontSize: width * 0.04, color: Palette.blackColor),
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide:
-                                        BorderSide(color: Colors.grey.shade100))),
+                                        BorderSide(color: Palette.greyColor.shade100))),
                               ),
                             ),
                             SizedBox(
@@ -169,7 +174,7 @@ class _AddNewUserState extends State<AddNewUser> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        color: Colors.grey.shade300),
+                                        color: Palette.greyColor.shade300),
                                     height: height * 0.042,
                                     width: width * 0.28,
                                     child: const Center(
@@ -192,7 +197,7 @@ class _AddNewUserState extends State<AddNewUser> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        color: Colors.blueAccent),
+                                        color: Palette.greyColor),
                                     height: height * 0.042,
                                     width: width * 0.28,
                                     child: const Center(

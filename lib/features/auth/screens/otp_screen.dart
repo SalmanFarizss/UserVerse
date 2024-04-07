@@ -1,12 +1,15 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
+import 'package:user_verse/core/constants/conatants.dart';
 import 'package:user_verse/features/auth/bloc/auth_bloc.dart';
 import 'package:user_verse/features/auth/bloc/auth_state.dart';
 import 'package:user_verse/features/auth/screens/login_screen.dart';
 import 'package:user_verse/features/home/screens/home_screen.dart';
 import '../../../core/globals.dart';
+import '../../../core/theme/palette.dart';
 import '../../../core/utils.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -21,8 +24,20 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   TextEditingController otpController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  int duration = 90;
+  late Timer timer;
+  @override
+  void initState() {
+    Future.delayed(const Duration(seconds: 91)).then((value) {
+      failureSnackBar(context, 'Session Expired..');
+      Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => const LoginScreen(),));
+    });
+    _startTimer();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+    String timer = '$duration sec';
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
@@ -63,7 +78,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   SizedBox(
                     height: height * 0.18,
                     width: width,
-                    child: Image.asset('assets/images/otp_image.png'),
+                    child: Image.asset(Constants.otpImage),
                   ),
                   SizedBox(
                     height: height * 0.06,
@@ -79,7 +94,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   Text(
                     'Enter the verification code we just sent to your number +91 ********${widget.phoneNumber.substring(8, 10)}',
                     style: TextStyle(
-                        fontSize: width * 0.04, color: Colors.grey.shade600),
+                        fontSize: width * 0.04, color: Palette.greyColor.shade600),
                   ),
                   SizedBox(
                     height: height * 0.03,
@@ -96,36 +111,36 @@ class _OtpScreenState extends State<OtpScreen> {
                             height: width * 0.13,
                             width: width * 0.13,
                             textStyle: TextStyle(
-                                color: Colors.red,
+                                color: Palette.redColor,
                                 fontSize: width * 0.04,
                                 fontWeight: FontWeight.bold),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 border:
-                                    Border.all(color: Colors.grey, width: 1))),
+                                    Border.all(color: Palette.greyColor, width: 1))),
                         submittedPinTheme: PinTheme(
                             height: width * 0.13,
                             width: width * 0.13,
                             textStyle: TextStyle(
-                                color: Colors.red,
+                                color: Palette.redColor,
                                 fontSize: width * 0.04,
                                 fontWeight: FontWeight.bold),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 border:
-                                    Border.all(color: Colors.black, width: 1))
+                                    Border.all(color: Palette.blackColor, width: 1))
                         ),
                         errorPinTheme: PinTheme(
                             height: width * 0.13,
                             width: width * 0.13,
                             textStyle: TextStyle(
-                                color: Colors.red,
+                                color: Palette.redColor,
                                 fontSize: width * 0.04,
                                 fontWeight: FontWeight.bold),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 border:
-                                Border.all(color: Colors.red.shade400, width: 1))
+                                Border.all(color: Palette.redColor.shade400, width: 1))
                         ),
                         validator: (value) {
                           if(value!.trim().length!=6){
@@ -137,6 +152,10 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
                   SizedBox(
                     height: height * 0.02,
+                  ),
+                  SizedBox(
+                    width: width,
+                    child: Center(child: Text(timer,style: const TextStyle(color:Palette.redColor,fontWeight: FontWeight.bold),)),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -168,12 +187,12 @@ class _OtpScreenState extends State<OtpScreen> {
                       width: width,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(height * 0.25),
-                          color: Colors.black),
+                          color: Palette.blackColor),
                       child: Center(
                         child: Text(
                           'Verify',
                           style: TextStyle(
-                              fontSize: width * 0.04, color: Colors.white),
+                              fontSize: width * 0.04, color: Palette.whiteColor),
                         ),
                       ),
                     ),
@@ -185,5 +204,31 @@ class _OtpScreenState extends State<OtpScreen> {
         },
       ),
     );
+  }
+  void _startTimer() {
+    const oneSec = Duration(seconds: 1);
+    timer = Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        if (duration == 0) {
+          timer.cancel();
+          if(mounted){
+            setState(() {
+            });
+          }
+        } else {
+          duration--;
+          if(mounted){
+            setState(() {
+            });
+          }
+        }
+      },
+    );
+  }
+  @override
+  void dispose() {
+    otpController.dispose();
+    super.dispose();
   }
 }

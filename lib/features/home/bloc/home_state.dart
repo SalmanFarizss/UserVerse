@@ -14,7 +14,7 @@ final class HomeSuccess extends HomeState {}
 
 final class FetchingCompleted extends HomeState {
   List<UserModel> users;
-  DocumentSnapshot lastDoc;
+  DocumentSnapshot? lastDoc;
   FetchingCompleted({required this.users,required this.lastDoc});
 }
 

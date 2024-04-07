@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:user_verse/core/globals.dart';
 import 'package:user_verse/core/utils.dart';
 import 'package:user_verse/features/auth/screens/otp_screen.dart';
+import '../../../core/constants/conatants.dart';
+import '../../../core/theme/palette.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_state.dart';
 
@@ -60,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: height * 0.18,
                   width: width,
-                  child: Image.asset('assets/images/login_image.png'),
+                  child: Image.asset(Constants.loginImage),
                 ),
                 SizedBox(
                   height: height * 0.06,
@@ -83,15 +85,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: phoneController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                        labelText: 'Enter Phone Number *',
-                        labelStyle: TextStyle(
-                            fontSize: width * 0.035, color: Colors.grey),
-                        // hintText: 'Enter Phone Number *',
-                        // hintStyle: TextStyle(fontSize: width*0.035,color: Colors.grey),
+                        label: RichText(
+                          text:  TextSpan(
+                              text: 'Enter Phone Number ',
+                              style: TextStyle(
+                                  fontSize: width * 0.035,
+                                  color:  Palette.greyColor,),
+                              children: [
+                                TextSpan(
+                                    text: '*', style: TextStyle(fontSize:width * 0.035,color: Palette.redColor))
+                              ]),
+                        ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
-                            borderSide:
-                                BorderSide(color: Colors.grey.shade100))),
+                            borderSide: BorderSide(color: Palette.greyColor.shade100))),
                   ),
                 ),
                 SizedBox(
@@ -103,21 +110,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         text: "By Continuing, I agree to TotalX's",
                         style: TextStyle(
                             fontSize: width * 0.035,
-                            color: Colors.grey.shade600)),
+                            color: Palette.greyColor.shade600)),
                     TextSpan(
                         text: ' Terms and conditions',
                         style: TextStyle(
-                            fontSize: width * 0.035, color: Colors.lightBlue),
+                            fontSize: width * 0.035, color: Palette.blueColor),
                         recognizer: TapGestureRecognizer()..onTap = () {}),
                     TextSpan(
                         text: '& ',
                         style: TextStyle(
                             fontSize: width * 0.035,
-                            color: Colors.grey.shade600)),
+                            color: Palette.greyColor.shade600)),
                     TextSpan(
                         text: 'privacy policy',
                         style: TextStyle(
-                            fontSize: width * 0.035, color: Colors.lightBlue),
+                            fontSize: width * 0.035, color: Palette.blueColor),
                         recognizer: TapGestureRecognizer()..onTap = () {}),
                   ]),
                 ),
@@ -135,12 +142,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: width,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(height * 0.25),
-                        color: Colors.black),
+                        color: Palette.blackColor),
                     child: Center(
                         child: Text(
                       'Get OTP',
                       style: TextStyle(
-                          fontSize: width * 0.05, color: Colors.white),
+                          fontSize: width * 0.05, color: Palette.whiteColor),
                     )),
                   ),
                 )

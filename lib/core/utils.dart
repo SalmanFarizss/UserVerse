@@ -6,7 +6,7 @@ void failureSnackBar(BuildContext context, String message) {
     ..hideCurrentSnackBar()
     ..showSnackBar(SnackBar(
       content: Text(message),
-      backgroundColor: Palette.redColor,
+      backgroundColor: Palette.redColor.shade400,
     ));
 }
 
@@ -15,7 +15,7 @@ void successSnackBar(BuildContext context, String message) {
     ..hideCurrentSnackBar()
     ..showSnackBar(SnackBar(
       content: Text(message),
-      backgroundColor: Palette.greenColor,
+      backgroundColor: Palette.greenColor.shade400,
     ));
 }
 

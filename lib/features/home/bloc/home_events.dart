@@ -28,7 +28,7 @@ final class GetMoreUsers extends HomeEvents{
 
 final class EmitFetchingComplete extends HomeEvents{
  List<UserModel> users;
- DocumentSnapshot lastDoc;
+ DocumentSnapshot? lastDoc;
  EmitFetchingComplete({required this.users,required this.lastDoc});
 }
 
