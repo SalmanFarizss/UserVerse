@@ -1,29 +1,3 @@
 {
-  "project_info": {
-    "project_number": "699252418853",
-    "project_id": "user-verse",
-    "storage_bucket": "user-verse.appspot.com"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:699252418853:android:cd292f883b6afaf1f5d2cc",
-        "android_client_info": {
-          "package_name": "com.sfc.user_verse"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAFlQrZ_da9gi3_n0itZl4QKaicPzq2194"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    }
-  ],
-  "configuration_version": "1"
+ // content of this file is removed for security reasons, use your own google-services.json file
 }
